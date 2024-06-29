@@ -69,8 +69,8 @@ stop_service() {
 }
 
 reload_service() {
-	unset_lock
-  	set_lock
+  unset_lock
+  set_lock
 	reload_config firewall
 	fw3 reload
 	unset_lock
