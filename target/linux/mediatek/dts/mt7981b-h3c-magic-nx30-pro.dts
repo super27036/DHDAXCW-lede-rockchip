@@ -3,6 +3,7 @@
 /dts-v1/;
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/input/input.h>
+#include <dt-bindings/leds/common.h>
 
 #include "mt7981.dtsi"
 
@@ -12,7 +13,6 @@
 
 	aliases {
 		serial0 = &uart0;
-
 		led-boot = &led_status_green;
 		led-failsafe = &led_status_red;
 		led-running = &led_status_green;
@@ -47,12 +47,14 @@
 		compatible = "gpio-leds";
 
 		led_status_green: green {
-			label = "green:status";
+			function = LED_FUNCTION_STATUS;
+			color = <LED_COLOR_ID_GREEN>;
 			gpios = <&pio 4 GPIO_ACTIVE_LOW>;
 		};
 
 		led_status_red: red {
-			label = "red:status";
+			function = LED_FUNCTION_STATUS;
+			color = <LED_COLOR_ID_RED>;
 			gpios = <&pio 5 GPIO_ACTIVE_LOW>;
 		};
 	};
@@ -82,7 +84,7 @@
 };
 
 &mdio_bus {
-	switch: switch@0 {
+	switch: switch@1f {
 		compatible = "mediatek,mt7531";
 		reg = <31>;
 		reset-gpios = <&pio 39 GPIO_ACTIVE_HIGH>;
@@ -107,10 +109,6 @@
 		spi-max-frequency = <52000000>;
 		spi-tx-bus-width = <4>;
 		spi-rx-bus-width = <4>;
-
-		mediatek,nmbm;
-		mediatek,bmt-max-ratio = <1>;
-		mediatek,bmt-max-reserved-blocks = <64>;
 
 		partitions {
 			compatible = "fixed-partitions";
@@ -196,7 +194,6 @@
 
 		port@6 {
 			reg = <6>;
-			label = "cpu";
 			ethernet = <&gmac0>;
 			phy-mode = "2500base-x";
 

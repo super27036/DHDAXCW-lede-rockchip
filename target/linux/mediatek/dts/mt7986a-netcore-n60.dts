@@ -3,6 +3,7 @@
 /dts-v1/;
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/input/input.h>
+#include <dt-bindings/leds/common.h>
 
 #include "mt7986a.dtsi"
 
@@ -46,13 +47,15 @@
 	leds {
 		compatible = "gpio-leds";
 
-		led_status_red: status_red {
-			label = "red:status";
+		led_status_red: status-red {
+			color = <LED_COLOR_ID_RED>;
+			function = LED_FUNCTION_STATUS;
 			gpios = <&pio 29 GPIO_ACTIVE_LOW>;
 		};
 
-		led_status_blue: status_blue {
-			label = "blue:status";
+		led_status_blue: status-blue {
+			color = <LED_COLOR_ID_BLUE>;
+			function = LED_FUNCTION_STATUS;
 			gpios = <&pio 32 GPIO_ACTIVE_LOW>;
 		};
 	};
@@ -107,7 +110,7 @@
 		mxl,led-config = <0x0 0x0 0x0 0x3f0>;
 	};
 
-	switch: switch@0 {
+	switch: switch@1f {
 		compatible = "mediatek,mt7531";
 		reg = <31>;
 		reset-gpios = <&pio 5 GPIO_ACTIVE_HIGH>;
@@ -145,7 +148,6 @@
 
 		port@6 {
 			reg = <6>;
-			label = "cpu";
 			ethernet = <&gmac0>;
 			phy-mode = "2500base-x";
 
@@ -172,10 +174,6 @@
 		spi-max-frequency = <20000000>;
 		spi-tx-bus-width = <4>;
 		spi-rx-bus-width = <4>;
-
-		mediatek,nmbm;
-		mediatek,bmt-max-ratio = <1>;
-		mediatek,bmt-max-reserved-blocks = <64>;
 
 		partitions {
 			compatible = "fixed-partitions";
@@ -270,15 +268,17 @@
 };
 
 &factory {
-	compatible = "nvmem-cells";
-	#address-cells = <1>;
-	#size-cells = <1>;
+	nvmem-layout {
+		compatible = "fixed-layout";
+		#address-cells = <1>;
+		#size-cells = <1>;
 
-	macaddr_lan: macaddr@1fef20 {
-		reg = <0x1fef20 0x6>;
-	};
+		macaddr_lan: macaddr@1fef20 {
+			reg = <0x1fef20 0x6>;
+		};
 
-	macaddr_wan: macaddr@1fef26 {
-		reg = <0x1fef26 0x6>;
+		macaddr_wan: macaddr@1fef26 {
+			reg = <0x1fef26 0x6>;
+		};
 	};
 };

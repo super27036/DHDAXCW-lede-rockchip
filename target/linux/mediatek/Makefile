@@ -8,12 +8,10 @@ BOARDNAME:=MediaTek Ralink ARM
 SUBTARGETS:=mt7622 mt7623 mt7629 filogic
 FEATURES:=dt-overlay emmc fpu gpio nand pci pcie rootfs-part separate_ramdisk squashfs usb
 
-KERNEL_PATCHVER:=6.1
-KERNEL_TESTING_PATCHVER:=6.6
+KERNEL_PATCHVER:=6.6
 
 include $(INCLUDE_DIR)/target.mk
 DEFAULT_PACKAGES += \
-	kmod-leds-gpio kmod-gpio-button-hotplug \
-	autocore-arm htop wpad-openssl uboot-envtools
+	kmod-leds-gpio kmod-gpio-button-hotplug
 
 $(eval $(call BuildTarget))
