@@ -75,7 +75,7 @@ Link: https://lore.kernel.org/r/20230418142109.49762-2-sebastian.reichel@collabo
  
  #define RD_LOCAL_LPI_ENABLED                    BIT(0)
  #define RD_LOCAL_PENDTABLE_PREALLOCATED         BIT(1)
-@@ -2384,6 +2386,9 @@ retry_baser:
+@@ -2364,6 +2366,9 @@ retry_baser:
  	its_write_baser(its, baser, val);
  	tmp = baser->val;
  
@@ -85,7 +85,7 @@ Link: https://lore.kernel.org/r/20230418142109.49762-2-sebastian.reichel@collabo
  	if ((val ^ tmp) & GITS_BASER_SHAREABILITY_MASK) {
  		/*
  		 * Shareability didn't stick. Just use
-@@ -3121,6 +3126,9 @@ static void its_cpu_init_lpis(void)
+@@ -3101,6 +3106,9 @@ static void its_cpu_init_lpis(void)
  	gicr_write_propbaser(val, rbase + GICR_PROPBASER);
  	tmp = gicr_read_propbaser(rbase + GICR_PROPBASER);
  
@@ -95,7 +95,7 @@ Link: https://lore.kernel.org/r/20230418142109.49762-2-sebastian.reichel@collabo
  	if ((tmp ^ val) & GICR_PROPBASER_SHAREABILITY_MASK) {
  		if (!(tmp & GICR_PROPBASER_SHAREABILITY_MASK)) {
  			/*
-@@ -3145,6 +3153,9 @@ static void its_cpu_init_lpis(void)
+@@ -3125,6 +3133,9 @@ static void its_cpu_init_lpis(void)
  	gicr_write_pendbaser(val, rbase + GICR_PENDBASER);
  	tmp = gicr_read_pendbaser(rbase + GICR_PENDBASER);
  
@@ -105,7 +105,7 @@ Link: https://lore.kernel.org/r/20230418142109.49762-2-sebastian.reichel@collabo
  	if (!(tmp & GICR_PENDBASER_SHAREABILITY_MASK)) {
  		/*
  		 * The HW reports non-shareable, we must remove the
-@@ -4726,6 +4737,19 @@ static bool __maybe_unused its_enable_qu
+@@ -4706,6 +4717,19 @@ static bool __maybe_unused its_enable_qu
  	return true;
  }
  
@@ -125,7 +125,7 @@ Link: https://lore.kernel.org/r/20230418142109.49762-2-sebastian.reichel@collabo
  static const struct gic_quirk its_quirks[] = {
  #ifdef CONFIG_CAVIUM_ERRATUM_22375
  	{
-@@ -4772,6 +4796,14 @@ static const struct gic_quirk its_quirks
+@@ -4752,6 +4776,14 @@ static const struct gic_quirk its_quirks
  		.init	= its_enable_quirk_hip07_161600802,
  	},
  #endif
@@ -140,7 +140,7 @@ Link: https://lore.kernel.org/r/20230418142109.49762-2-sebastian.reichel@collabo
  	{
  	}
  };
-@@ -5111,6 +5143,9 @@ static int __init its_probe_one(struct r
+@@ -5091,6 +5123,9 @@ static int __init its_probe_one(struct r
  	gits_write_cbaser(baser, its->base + GITS_CBASER);
  	tmp = gits_read_cbaser(its->base + GITS_CBASER);
  

@@ -21,7 +21,7 @@ Link: https://lore.kernel.org/r/20230703164129.193991-1-sebastian.reichel@collab
 
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -4741,7 +4741,8 @@ static bool __maybe_unused its_enable_rk
+@@ -4721,7 +4721,8 @@ static bool __maybe_unused its_enable_rk
  {
  	struct its_node *its = data;
  

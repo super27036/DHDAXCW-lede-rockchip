@@ -24,7 +24,7 @@ Link: https://lore.kernel.org/r/20231030083256.4345-1-fangxiang3@xiaomi.com
 
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2383,12 +2383,12 @@ retry_baser:
+@@ -2363,12 +2363,12 @@ retry_baser:
  		break;
  	}
  
@@ -40,7 +40,7 @@ Link: https://lore.kernel.org/r/20231030083256.4345-1-fangxiang3@xiaomi.com
  	if ((val ^ tmp) & GITS_BASER_SHAREABILITY_MASK) {
  		/*
  		 * Shareability didn't stick. Just use
-@@ -2398,10 +2398,9 @@ retry_baser:
+@@ -2378,10 +2378,9 @@ retry_baser:
  		 * non-cacheable as well.
  		 */
  		shr = tmp & GITS_BASER_SHAREABILITY_MASK;
@@ -53,7 +53,7 @@ Link: https://lore.kernel.org/r/20231030083256.4345-1-fangxiang3@xiaomi.com
  		goto retry_baser;
  	}
  
-@@ -2613,6 +2612,11 @@ static int its_alloc_tables(struct its_n
+@@ -2593,6 +2592,11 @@ static int its_alloc_tables(struct its_n
  		/* erratum 24313: ignore memory access type */
  		cache = GITS_BASER_nCnB;
  
