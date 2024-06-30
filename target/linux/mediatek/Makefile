@@ -12,7 +12,6 @@ KERNEL_PATCHVER:=6.6
 
 include $(INCLUDE_DIR)/target.mk
 DEFAULT_PACKAGES += \
-		kmod-leds-gpio kmod-gpio-button-hotplug \
-		autocore-arm htop wpad-openssl uboot-envtools
+	kmod-leds-gpio kmod-gpio-button-hotplug
 
 $(eval $(call BuildTarget))
