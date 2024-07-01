@@ -114,6 +114,10 @@
 	status = "okay";
 };
 
+&btif {
+	status = "okay";
+};
+
 &cir {
 	pinctrl-names = "default";
 	pinctrl-0 = <&irrx_pins>;
@@ -143,13 +147,13 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		switch@1f {
+		switch@0 {
 			compatible = "mediatek,mt7531";
-			reg = <31>;
 			#interrupt-cells = <1>;
 			interrupt-controller;
 			interrupt-parent = <&pio>;
 			interrupts = <53 IRQ_TYPE_LEVEL_HIGH>;
+			reg = <0>;
 			reset-gpios = <&pio 54 GPIO_ACTIVE_HIGH>;
 
 			ports {
@@ -187,6 +191,7 @@
 
 				port@6 {
 					ethernet = <&gmac0>;
+					label = "cpu";
 					phy-mode = "2500base-x";
 					reg = <6>;
 
@@ -401,22 +406,19 @@
 			};
 
 			factory: partition@1c0000 {
+				compatible = "nvmem-cells";
 				label = "Factory";
 				reg = <0x1c0000 0x0100000>;
+				#address-cells = <1>;
+				#size-cells = <1>;
 				read-only;
 
-				nvmem-layout {
-					compatible = "fixed-layout";
-					#address-cells = <1>;
-					#size-cells = <1>;
+				macaddr_factory_7fff4: macaddr@7fff4 {
+					reg = <0x7fff4 0x6>;
+				};
 
-					macaddr_factory_7fff4: macaddr@7fff4 {
-						reg = <0x7fff4 0x6>;
-					};
-
-					macaddr_factory_7fffa: macaddr@7fffa {
-						reg = <0x7fffa 0x6>;
-					};
+				macaddr_factory_7fffa: macaddr@7fffa {
+					reg = <0x7fffa 0x6>;
 				};
 			};
 

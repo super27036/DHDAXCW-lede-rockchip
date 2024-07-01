@@ -7,11 +7,10 @@
 	compatible = "glinet,gl-mt3000", "mediatek,mt7981";
 
 	aliases {
-		label-mac-device = &gmac0;
-		led-boot = &led_lightblue;
-		led-failsafe = &led_lightblue;
+		led-boot = &led_run;
+		led-failsafe = &led_run;
 		led-running = &led_white;
-		led-upgrade = &led_lightblue;
+		led-upgrade = &led_run;
 		serial0 = &uart0;
 	};
 
@@ -40,12 +39,12 @@
 	leds {
 		compatible = "gpio-leds";
 
-		led_lightblue: led@0 {
+		led_run: run {
 			label = "blue:run";
 			gpios = <&pio 31 GPIO_ACTIVE_LOW>;
 		};
 
-		led_white: led@1 {
+		led_white: system {
 			label = "white:system";
 			gpios = <&pio 30 GPIO_ACTIVE_LOW>;
 		};
@@ -56,7 +55,7 @@
 		regulator-name = "fan";
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
-		gpios = <&pio 28 GPIO_ACTIVE_HIGH>;
+		gpio = <&pio 28 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
 		regulator-boot-on;
 	};
@@ -66,7 +65,7 @@
 		regulator-name = "usb_vbus";
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
-		gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
+		gpio = <&pio 12 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
 		regulator-boot-on;
 	};
@@ -91,7 +90,7 @@
 		reg = <0>;
 		phy-mode = "2500base-x";
 		phy-handle = <&phy0>;
-		nvmem-cells = <&macaddr 0>;
+		nvmem-cells = <&macaddr>;
 		nvmem-cell-names = "mac-address";
 	};
 
@@ -100,8 +99,9 @@
 		reg = <1>;
 		phy-mode = "gmii";
 		phy-handle = <&int_gbe_phy>;
-		nvmem-cells = <&macaddr 1>;
+		nvmem-cells = <&macaddr>;
 		nvmem-cell-names = "mac-address";
+		mac-address-increment = <1>;
 	};
 };
 
@@ -176,25 +176,18 @@
 			factory: partition@180000 {
 				label = "Factory";
 				reg = <0x180000 0x0200000>;
-				read-only;
+				compatible = "nvmem-cells";
+				#address-cells = <1>;
+				#size-cells = <1>;
 
-				nvmem-layout {
-					compatible = "fixed-layout";
-					#address-cells = <1>;
-					#size-cells = <1>;
-
-					macaddr: macaddr@a {
-						compatible = "mac-base";
-						reg = <0xa 0x6>;
-						#nvmem-cell-cells = <1>;
-					};
+				macaddr: macaddr@a {
+					reg = <0xa 0x6>;
 				};
 			};
 
 			partition@380000 {
 				label = "FIP";
 				reg = <0x380000 0x0200000>;
-				read-only;
 			};
 
 			partition@580000 {

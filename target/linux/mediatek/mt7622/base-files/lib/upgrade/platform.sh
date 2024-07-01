@@ -1,38 +1,27 @@
 REQUIRE_IMAGE_METADATA=1
-RAMFS_COPY_BIN='fitblk'
 
 platform_do_upgrade() {
 	local board=$(board_name)
 	local file_type=$(identify $1)
 
 	case "$board" in
-	bananapi,bpi-r64|\
-	linksys,e8450-ubi|\
-	ubnt,unifi-6-lr-v1-ubootmod|\
-	ubnt,unifi-6-lr-v2-ubootmod|\
-	ubnt,unifi-6-lr-v3-ubootmod|\
-	xiaomi,redmi-router-ax6s)
-		[ -e /dev/fit0 ] && fitblk /dev/fit0
-		[ -e /dev/fitrw ] && fitblk /dev/fitrw
-		bootdev="$(fitblk_get_bootdev)"
-		case "$bootdev" in
-		mmcblk*)
-			EMMC_KERN_DEV="/dev/$bootdev"
+	bananapi,bpi-r64)
+		local rootdev="$(cmdline_get_var root)"
+		rootdev="${rootdev##*/}"
+		rootdev="${rootdev%p[0-9]*}"
+		case "$rootdev" in
+		mmc*)
+			CI_ROOTDEV="$rootdev"
+			CI_KERNPART="production"
 			emmc_do_upgrade "$1"
 			;;
-		mtdblock*)
-			PART_NAME="/dev/mtd${bootdev:8}"
-			default_do_upgrade "$1"
-			;;
-		ubiblock*)
+		*)
 			CI_KERNPART="fit"
 			nand_do_upgrade "$1"
 			;;
 		esac
 		;;
-
-	buffalo,wsr-2533dhp2|\
-	buffalo,wsr-3200ax4s)
+	buffalo,wsr-2533dhp2)
 		local magic="$(get_magic_long "$1")"
 
 		# use "mtd write" if the magic is "DHP2 (0x44485032)"
@@ -44,12 +33,15 @@ platform_do_upgrade() {
 			nand_do_upgrade "$1"
 		fi
 		;;
-	dlink,eagle-pro-ai-m32-a1|\
-	dlink,eagle-pro-ai-r32-a1|\
 	elecom,wrc-x3200gst3|\
 	mediatek,mt7622-rfb1-ubi|\
 	netgear,wax206|\
-	totolink,a8000ru)
+	totolink,a8000ru|\
+	xiaomi,redmi-router-ax6s)
+		nand_do_upgrade "$1"
+		;;
+	linksys,e8450-ubi)
+		CI_KERNPART="fit"
 		nand_do_upgrade "$1"
 		;;
 	linksys,e8450)
@@ -75,18 +67,15 @@ platform_check_image() {
 	[ "$#" -gt 1 ] && return 1
 
 	case "$board" in
-	buffalo,wsr-2533dhp2|\
-	buffalo,wsr-3200ax4s)
+	buffalo,wsr-2533dhp2)
 		buffalo_check_image "$board" "$magic" "$1" || return 1
 		;;
-	dlink,eagle-pro-ai-m32-a1|\
-	dlink,eagle-pro-ai-r32-a1|\
 	elecom,wrc-x3200gst3|\
 	mediatek,mt7622-rfb1-ubi|\
 	netgear,wax206|\
-	totolink,a8000ru)
+	totolink,a8000ru|\
+	xiaomi,redmi-router-ax6s)
 		nand_do_platform_check "$board" "$1"
-		return $?
 		;;
 	*)
 		[ "$magic" != "d00dfeed" ] && {
@@ -103,7 +92,9 @@ platform_check_image() {
 platform_copy_config() {
 	case "$(board_name)" in
 	bananapi,bpi-r64)
-		if fitblk_get_bootdev | grep -q mmc; then
+		export_bootdevice
+		export_partdevice rootdev 0
+		if echo $rootdev | grep -q mmc; then
 			emmc_copy_config
 		fi
 		;;

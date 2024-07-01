@@ -12,12 +12,11 @@
 	compatible = "glinet,gl-mt6000", "mediatek,mt7986a";
 
 	aliases {
-		serial0 = &uart0;
-		label-mac-device = &gmac1;
-		led-boot = &led_blue;
-		led-failsafe = &led_blue;
+		led-boot = &led_run;
+		led-failsafe = &led_run;
 		led-running = &led_white;
-		led-upgrade = &led_white;
+		led-upgrade = &led_run;
+		serial0 = &uart0;
 	};
 
 	chosen {
@@ -56,12 +55,13 @@
 	leds {
 		compatible = "gpio-leds";
 
-		led_blue: led@0 {
+		led_run: run {
 			label = "blue:run";
 			gpios = <&pio 38 GPIO_ACTIVE_LOW>;
+			default-state = "on";
 		};
 
-		led_white: led@1 {
+		led_white: system {
 			label = "white:system";
 			gpios = <&pio 37 GPIO_ACTIVE_LOW>;
 		};
@@ -85,8 +85,6 @@
 		compatible = "mediatek,eth-mac";
 		reg = <0>;
 		phy-mode = "2500base-x";
-		nvmem-cells = <&macaddr_factory_a 2>;
-		nvmem-cell-names = "mac-address";
 
 		fixed-link {
 			speed = <2500>;
@@ -98,8 +96,6 @@
 	gmac1: mac@1 {
 		compatible = "mediatek,eth-mac";
 		reg = <1>;
-		nvmem-cells = <&macaddr_factory_a 0>;
-		nvmem-cell-names = "mac-address";
 		phy-mode = "2500base-x";
 		phy-handle = <&phy1>;
 	};
@@ -130,7 +126,7 @@
 			realtek,aldps-enable;
 		};
 
-		switch: switch@1f {
+		switch: switch@31 {
 			compatible = "mediatek,mt7531";
 			reg = <31>;
 			reset-gpios = <&pio 18 GPIO_ACTIVE_HIGH>;
@@ -290,8 +286,6 @@
 };
 
 &wifi {
-	nvmem-cells = <&eeprom_factory_0>;
-	nvmem-cell-names = "eeprom";
 	pinctrl-names = "default";
 	pinctrl-0 = <&wf_2g_5g_pins>;
 	status = "okay";
@@ -313,42 +307,4 @@
 	no-sd;
 	no-sdio;
 	status = "okay";
-
-	card@0 {
-		compatible = "mmc-card";
-		reg = <0>;
-
-		block {
-			compatible = "block-device";
-			partitions {
-				block-partition-env {
-					partname = "u-boot-env";
-
-					nvmem-layout {
-						compatible = "u-boot,env-layout";
-					};
-				};
-
-				block-partition-factory {
-					partname = "factory";
-
-					nvmem-layout {
-						compatible = "fixed-layout";
-						#address-cells = <1>;
-						#size-cells = <1>;
-
-						eeprom_factory_0: eeprom@0 {
-							reg = <0x0 0x1000>;
-						};
-
-						macaddr_factory_a: macaddr@a {
-							compatible = "mac-base";
-							reg = <0xa 0x6>;
-							#nvmem-cell-cells = <1>;
-						};
-					};
-				};
-			};
-		};
-	};
 };

@@ -185,10 +185,10 @@ typedef enum rtk_switch_maxPktLen_linkSpeed_e {
 #define RTK_SCAN_ALL_LOG_PORT(__port__)                     for(__port__ = 0; __port__ < RTK_SWITCH_PORT_NUM; __port__++)  if( rtk_switch_logicalPortCheck(__port__) == RT_ERR_OK)
 #define RTK_SCAN_ALL_LOG_PORTMASK(__portmask__)             for((__portmask__).bits[0] = 0; (__portmask__).bits[0] < 0x7FFFF; (__portmask__).bits[0]++)  if( rtk_switch_isPortMaskValid(&__portmask__) == RT_ERR_OK)
 
-/* Port mask definition */
+/* Port mask defination */
 #define RTK_PHY_PORTMASK_ALL                                (rtk_switch_phyPortMask_get())
 
-/* Port definition*/
+/* Port defination*/
 #define RTK_MAX_LOGICAL_PORT_ID                             (rtk_switch_maxLogicalPort_get())
 
 /* Function Name:
@@ -477,7 +477,7 @@ extern rtk_api_ret_t rtk_switch_isPortMaskExt(rtk_portmask_t *pPmask);
 /* Function Name:
  *      rtk_switch_portmask_L2P_get
  * Description:
- *      Get physical portmask from logical portmask
+ *      Get physicl portmask from logical portmask
  * Input:
  *      pLogicalPmask       - logical port mask
  * Output:
@@ -546,7 +546,7 @@ rtk_api_ret_t rtk_switch_logPortMask_get(rtk_portmask_t *pPortmask);
 /* Function Name:
  *      rtk_switch_init
  * Description:
- *      Set chip to default configuration environment
+ *      Set chip to default configuration enviroment
  * Input:
  *      None
  * Output:

@@ -102,4 +102,3 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
  	return 0;
  
  out_detach:
-
