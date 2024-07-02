@@ -26,7 +26,7 @@ Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
 --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-@@ -745,6 +745,14 @@
+@@ -741,6 +741,14 @@
  	status = "okay";
  };
  
@@ -41,7 +41,7 @@ Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
  &u2phy2 {
  	status = "okay";
  };
-@@ -764,6 +772,14 @@
+@@ -760,6 +768,14 @@
  	status = "okay";
  };
  
@@ -56,7 +56,7 @@ Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
  &usb_host0_ehci {
  	status = "okay";
  };
-@@ -780,6 +796,11 @@
+@@ -776,6 +792,11 @@
  	status = "okay";
  };
  

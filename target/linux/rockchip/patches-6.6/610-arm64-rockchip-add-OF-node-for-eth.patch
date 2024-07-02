@@ -32,7 +32,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
 +};
 --- a/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
-@@ -409,9 +409,11 @@
+@@ -400,9 +400,11 @@
  	#size-cells = <0>;
  
  	/* Second port is for USB 3.0 */
@@ -48,7 +48,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
  
 --- a/arch/arm64/boot/dts/rockchip/rk3328-orangepi-r1-plus.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3328-orangepi-r1-plus.dts
-@@ -362,9 +362,11 @@
+@@ -358,9 +358,11 @@
  	#size-cells = <0>;
  
  	/* Second port is for USB 3.0 */
@@ -82,7 +82,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
 +};
 --- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dts
-@@ -83,6 +83,19 @@
+@@ -76,6 +76,19 @@
  	max-link-speed = <1>;
  	num-lanes = <1>;
  	vpcie3v3-supply = <&vcc3v3_sys>;
@@ -166,7 +166,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
  
 --- a/arch/arm64/boot/dts/rockchip/rk3568-rock-3a.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3568-rock-3a.dts
-@@ -273,6 +273,10 @@
+@@ -269,6 +269,10 @@
  		     &gmac1m1_rgmii_clk
  		     &gmac1m1_clkinout
  		     &gmac1m1_rgmii_bus>;
@@ -177,7 +177,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
  	status = "okay";
  };
  
-@@ -592,9 +596,7 @@
+@@ -588,9 +592,7 @@
  		reg = <0x0>;
  		pinctrl-names = "default";
  		pinctrl-0 = <&eth_phy_rst>;
@@ -188,24 +188,3 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
  	};
  };
  
-
- 
- &pcie2x1l1 {
-@@ -546,6 +557,17 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pcie2_2_rst>;
- 	status = "okay";
-+
-+	pcie@0,0 {
-+		reg = <0x00400000 0 0 0 0>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+
-+		rtl8125_1: pcie@40,0 {
-+			reg = <0x000000 0 0 0 0>;
-+			label = "eth1";
-+		};
-+	};
- };
- 
- &pcie30phy {

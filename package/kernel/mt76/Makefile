@@ -1,25 +1,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mt76
-PKG_RELEASE=5
+PKG_RELEASE=1
 
 PKG_LICENSE:=GPLv2
 PKG_LICENSE_FILES:=
 
-PKG_SOURCE_PROTO:=git
-
-ifdef CONFIG_LINUX_6_6
 PKG_SOURCE_URL:=https://github.com/openwrt/mt76
+PKG_SOURCE_PROTO:=git
 PKG_SOURCE_DATE:=2024-05-17
 PKG_SOURCE_VERSION:=513c131c6309712a51502870b041f45b4bd6a6d4
 PKG_MIRROR_HASH:=3e5d8ee6b8b122cc4e32668fdde0552a9fa23819b7ebdc758ecb63b5f761683a
-else
-PKG_SOURCE_URL:=https://github.com/DHDAXCW/mt76
-PKG_SOURCE_DATE:=2023-06-04
-PKG_SOURCE_VERSION:=23c5657017e1d022b8930d31a091e1f3e3d4b8e6
-PKG_MIRROR_HASH:=cadf1288ac684863b44924a170d15fbd461d5fc5f219c2cf57766d545cc82755
-PATCH_DIR:=./patches-6.1
-endif
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_USE_NINJA:=0
@@ -688,4 +679,3 @@ $(eval $(call KernelPackage,mt7996e))
 $(eval $(call KernelPackage,mt7996-firmware))
 $(eval $(call KernelPackage,mt76))
 $(eval $(call BuildPackage,mt76-test))
-
