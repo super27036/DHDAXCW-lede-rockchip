@@ -6,11 +6,24 @@ PKG_RELEASE=1
 PKG_LICENSE:=GPLv2
 PKG_LICENSE_FILES:=
 
-PKG_SOURCE_VERSION:=20240714
-PKG_SOURCE_URL:=https://codeload.github.com/ptpt52/mt76/tar.gz/$(PKG_SOURCE_VERSION)?
-PKG_HASH:=aa2e2c91d3f0d4b5151ac8ab3d1ea4dd2289ea825cdab80c7a9af166459be0df
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_VERSION := $(PKG_SOURCE_VERSION)
+PKG_SOURCE_URL:=https://github.com/openwrt/mt76
+PKG_SOURCE_PROTO:=git
+
+ifdef CONFIG_LINUX_5_4
+PKG_SOURCE_DATE:=2022-12-22
+PKG_SOURCE_VERSION:=5b509e80384ab019ac11aa90c81ec0dbb5b0d7f2
+PKG_MIRROR_HASH:=6fc25df4d28becd010ff4971b23731c08b53e69381a9e4c868091899712f78a9
+PATCH_DIR:=./patches-5.4
+else ifndef ($(filter on,$(CONFIG_LINUX_6_1) $(CONFIG_LINUX_6_6)),)
+PKG_SOURCE_DATE:=2024-04-04
+PKG_SOURCE_VERSION:=8f301a5c5fe3d998b50666bde1d35d412833be89
+PKG_MIRROR_HASH:=49291145ccceeac2964c9a43a46bed88298e5c1da63c6f3c2c1f6b3c1902a61e
+PATCH_DIR:=./patches-6.x
+else
+PKG_SOURCE_DATE:=2023-08-14
+PKG_SOURCE_VERSION:=b14c2351ddb8601c322576d84029e463d456caef
+PKG_MIRROR_HASH:=62b5e157ad525424b6857e77ed373e8d39d03af71b057f8b309d8b293d6eac5f
+endif
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_USE_NINJA:=0
@@ -630,11 +643,6 @@ endef
 define Package/mt76-test/install
 	mkdir -p $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tools/mt76-test $(1)/usr/sbin
-endef
-
-define Build/InstallDev
-	mkdir -p $(STAGING_DIR_IMAGE)
-	$(CP) $(PKG_BUILD_DIR)/firmware/mt7981_eeprom_mt7976_dbdc.bin $(STAGING_DIR_IMAGE)/
 endef
 
 $(eval $(call KernelPackage,mt76-core))
