@@ -2,7 +2,6 @@
 
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/input/input.h>
-#include <dt-bindings/leds/common.h>
 
 #include "mt7986a.dtsi"
 
@@ -17,8 +16,6 @@
 	};
 
 	chosen {
-		bootargs = "root=/dev/fit0 rootwait";
-		rootdisk = <&ubi_rootdisk>;
 		stdout-path = "serial0:115200n8";
 	};
 
@@ -70,14 +67,12 @@
 		compatible = "gpio-leds";
 
 		led_status_red: status_red {
-			function = LED_FUNCTION_STATUS;
-			color = <LED_COLOR_ID_RED>;
+			label = "red:status";
 			gpios = <&pio 7 GPIO_ACTIVE_HIGH>;
 		};
 
 		led_status_green: status_green {
-			function = LED_FUNCTION_STATUS;
-			color = <LED_COLOR_ID_GREEN>;
+			label = "green:status";
 			gpios = <&pio 8 GPIO_ACTIVE_HIGH>;
 		};
 
@@ -134,6 +129,7 @@
 		reset-deassert-us = <100000>;
 		reset-gpios = <&pio 13 GPIO_ACTIVE_LOW>;
 		realtek,aldps-enable;
+		realtek,led-link-select = <0xa7 0x0 0x0>;
 	};
 
 	phy7: ethernet-phy@7 {
@@ -143,9 +139,10 @@
 		reset-deassert-us = <100000>;
 		reset-gpios = <&pio 17 GPIO_ACTIVE_LOW>;
 		realtek,aldps-enable;
+		realtek,led-link-select = <0xa7 0x0 0x0>;
 	};
 
-	switch: switch@1f {
+	switch: switch@31 {
 		compatible = "mediatek,mt7531";
 		reg = <31>;
 		reset-gpios = <&pio 5 GPIO_ACTIVE_HIGH>;
@@ -159,6 +156,7 @@
 &spi0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&spi_flash_pins>;
+	cs-gpios = <0>, <0>;
 	status = "okay";
 
 	flash@0 {
@@ -186,18 +184,6 @@
 				label = "config";
 				reg = <0x100000 0x0060000>;
 				read-only;
-
-				nvmem-layout {
-					compatible = "fixed-layout";
-					#address-cells = <1>;
-					#size-cells = <1>;
-
-					macaddr_config_1c: macaddr@1c {
-						compatible = "mac-base";
-						reg = <0x1c 0x6>;
-						#nvmem-cell-cells = <1>;
-					};
-				};
 			};
 
 			factory: partition@160000 {
@@ -219,15 +205,8 @@
 			};
 
 			partition@580000 {
-				compatible = "linux,ubi";
-				reg = <0x580000 0x7800000>;
 				label = "ubi";
-
-				volumes {
-					ubi_rootdisk: ubi-volume-fit {
-						volname = "fit";
-					};
-				};
+				reg = <0x580000 0x7800000>;
 			};
 		};
 	};
@@ -276,7 +255,21 @@
 
 &wifi {
 	mediatek,mtd-eeprom = <&factory 0x0>;
-	nvmem-cells = <&macaddr_config_1c 2>;
+	nvmem-cells = <&macaddr_config_1c>;
 	nvmem-cell-names = "mac-address";
 	status = "okay";
+};
+
+&config {
+	nvmem-layout {
+		compatible = "fixed-layout";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		macaddr_config_1c: macaddr@1c {
+			compatible = "mac-base";
+			reg = <0x1c 0x6>;
+			#nvmem-cell-cells = <1>;
+		};
+	};
 };

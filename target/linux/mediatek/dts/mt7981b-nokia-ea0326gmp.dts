@@ -3,7 +3,7 @@
 /dts-v1/;
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/input/input.h>
-#include <dt-bindings/leds/common.h>
+
 #include "mt7981.dtsi"
 
 / {
@@ -11,83 +11,76 @@
 	compatible = "nokia,ea0326gmp", "mediatek,mt7981";
 
 	aliases {
-		led-boot = &power_led;
-		led-running = &power_led;
-		led-failsafe = &power_led;
-		led-upgrade = &power_led;
-		label-mac-device = &gmac1;
 		serial0 = &uart0;
+
+		led-boot = &led_power;
+		led-failsafe = &led_power;
+		led-running = &led_power;
+		led-upgrade = &led_power;
+		label-mac-device = &gmac1;
 	};
 
 	chosen {
-		rootdisk = <&ubi_rootdisk>;
 		stdout-path = "serial0:115200n8";
 	};
 
-	memory@40000000 {
+	memory {
 		reg = <0 0x40000000 0 0x10000000>;
 	};
 
 	gpio-keys {
 		compatible = "gpio-keys";
 
-		button-reset {
+		reset {
 			label = "reset";
 			linux,code = <KEY_RESTART>;
 			gpios = <&pio 1 GPIO_ACTIVE_LOW>;
 		};
 
-		button-wps {
+		wps {
 			label = "wps";
 			linux,code = <KEY_WPS_BUTTON>;
 			gpios = <&pio 0 GPIO_ACTIVE_LOW>;
 		};
 	};
 
-	gpio-leds {
+	leds {
 		compatible = "gpio-leds";
 
-		power_led: led-0 {
-			color = <LED_COLOR_ID_RED>;
-			function = LED_FUNCTION_POWER;
+		led_power: power {
+			label = "green:power";
 			gpios = <&pio 4 GPIO_ACTIVE_LOW>;
 		};
 
-		led-1 {
-			color = <LED_COLOR_ID_GREEN>;
-			function = LED_FUNCTION_WAN;
+		wan_green {
+			label = "green:wan";
 			gpios = <&pio 5 GPIO_ACTIVE_LOW>;
 		};
 
-		led-2 {
-			color = <LED_COLOR_ID_RED>;
-			function = LED_FUNCTION_WAN;
+		wan_red {
+			label = "red:wan";
 			gpios = <&pio 6 GPIO_ACTIVE_LOW>;
 		};
 
-		led-3 {
-			color = <LED_COLOR_ID_GREEN>;
-			function = LED_FUNCTION_LAN;
+		lan {
+			label = "green:lan";
 			gpios = <&pio 7 GPIO_ACTIVE_LOW>;
 		};
 
-		led-4 {
-			color = <LED_COLOR_ID_GREEN>;
-			function = LED_FUNCTION_WLAN;
+		wifi {
+			label = "green:wifi";
 			gpios = <&pio 8 GPIO_ACTIVE_LOW>;
+			linux,default-trigger = "phy1tpt";
 		};
 
-		led-5 {
-			color = <LED_COLOR_ID_GREEN>;
-			function = LED_FUNCTION_WPS;
+		wps {
+			label = "green:wps";
 			gpios = <&pio 9 GPIO_ACTIVE_LOW>;
 		};
 	};
 };
 
 &eth {
-	pinctrl-names = "default";
-	pinctrl-0 = <&mdio_pins>;
 	status = "okay";
 
 	gmac0: mac@0 {
@@ -117,7 +110,7 @@
 };
 
 &mdio_bus {
-	switch: switch@1f {
+	switch: switch@0 {
 		compatible = "mediatek,mt7531";
 		reg = <31>;
 		reset-gpios = <&pio 39 GPIO_ACTIVE_HIGH>;
@@ -128,41 +121,24 @@
 	};
 };
 
-&pio {
-	spi0_flash_pins: spi0-pins {
-		mux {
-			function = "spi";
-			groups = "spi0", "spi0_wp_hold";
-		};
-
-		conf-pu {
-			pins = "SPI0_CS", "SPI0_HOLD", "SPI0_WP";
-			drive-strength = <8>;
-			mediatek,pull-up-adv = <0>; /* bias-disable */
-		};
-
-		conf-pd {
-			pins = "SPI0_CLK", "SPI0_MOSI", "SPI0_MISO";
-			drive-strength = <8>;
-			mediatek,pull-up-adv = <0>; /* bias-disable */
-		};
-	};
-};
-
 &spi0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&spi0_flash_pins>;
 	status = "okay";
 
-	spi_nand: flash@0 {
+	spi_nand@0 {
+		compatible = "spi-nand";
 		#address-cells = <1>;
 		#size-cells = <1>;
-		compatible = "spi-nand";
 		reg = <0>;
 
 		spi-max-frequency = <52000000>;
 		spi-tx-bus-width = <4>;
 		spi-rx-bus-width = <4>;
+
+		mediatek,nmbm;
+		mediatek,bmt-max-ratio = <1>;
+		mediatek,bmt-max-reserved-blocks = <64>;
 
 		partitions {
 			compatible = "fixed-partitions";
@@ -170,8 +146,8 @@
 			#size-cells = <1>;
 
 			partition@0 {
-				label = "bl2";
-				reg = <0x00000 0x0100000>;
+				label = "BL2";
+				reg = <0x0000000 0x0100000>;
 				read-only;
 			};
 
@@ -180,56 +156,45 @@
 				reg = <0x0100000 0x0080000>;
 			};
 
-			partition@180000 {
-				label = "factory";
-				reg = <0x180000 0x0200000>;
+			factory: partition@180000 {
+				label = "Factory";
+				reg = <0x0180000 0x0200000>;
 				read-only;
-
-				nvmem-layout {
-					compatible = "fixed-layout";
-					#address-cells = <1>;
-					#size-cells = <1>;
-
-					eeprom_factory_0: eeprom@0 {
-						reg = <0x0 0x1000>;
-					};
-
-					macaddr_factory_28: macaddr@28 {
-						compatible = "mac-base";
-						reg = <0x28 0x6>;
-						#nvmem-cell-cells = <1>;
-					};
-				};
 			};
 
 			partition@380000 {
-				label = "fip";
-				reg = <0x380000 0x0200000>;
+				label = "FIP";
+				reg = <0x0380000 0x0200000>;
 				read-only;
 			};
 
 			partition@580000 {
-				label = "config";
-				reg = <0x580000 0x200000>;
+				label = "Config";
+				reg = <0x0580000 0x0200000>;
 				read-only;
 			};
 
 			partition@780000 {
-				label = "config2";
-				reg = <0x780000 0x200000>;
+				label = "Config2";
+				reg = <0x0780000 0x0200000>;
 				read-only;
 			};
 
 			partition@980000 {
-				compatible = "linux,ubi";
-				label = "ubi";
-				reg = <0x980000 0x7680000>;
+				label = "Aos-net";
+				reg = <0x0980000 0x0c00000>;
+				read-only;
+			};
 
-				volumes {
-					ubi_rootdisk: ubi-volume-fit {
-						volname = "fit";
-					};
-				};
+			partition@1580000 {
+				label = "bvasPlugin";
+				reg = <0x1580000 0x0c00000>;
+				read-only;
+			};
+
+			partition@2180000 {
+				label = "ubi";
+				reg = <0x2180000 0x5680000>;
 			};
 		};
 	};
@@ -257,6 +222,7 @@
 
 		port@6 {
 			reg = <6>;
+			label = "cpu";
 			ethernet = <&gmac0>;
 			phy-mode = "2500base-x";
 
@@ -265,6 +231,27 @@
 				full-duplex;
 				pause;
 			};
+		};
+	};
+};
+
+&pio {
+	spi0_flash_pins: spi0-pins {
+		mux {
+			function = "spi";
+			groups = "spi0", "spi0_wp_hold";
+		};
+
+		conf-pu {
+			pins = "SPI0_CS", "SPI0_HOLD", "SPI0_WP";
+			drive-strength = <8>;
+			mediatek,pull-up-adv = <0>; /* bias-disable */
+		};
+
+		conf-pd {
+			pins = "SPI0_CLK", "SPI0_MOSI", "SPI0_MISO";
+			drive-strength = <8>;
+			mediatek,pull-up-adv = <0>; /* bias-disable */
 		};
 	};
 };
@@ -278,7 +265,23 @@
 };
 
 &wifi {
-	nvmem-cells = <&eeprom_factory_0>;
-	nvmem-cell-names = "eeprom";
 	status = "okay";
+
+	mediatek,mtd-eeprom = <&factory 0x0>;
+	nvmem-cells = <&macaddr_factory_28 1>;
+	nvmem-cell-names = "mac-address";
+};
+
+&factory {
+	nvmem-layout {
+		compatible = "fixed-layout";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		macaddr_factory_28: macaddr@28 {
+			compatible = "mac-base";
+			reg = <0x28 0x6>;
+			#nvmem-cell-cells = <1>;
+		};
+	};
 };

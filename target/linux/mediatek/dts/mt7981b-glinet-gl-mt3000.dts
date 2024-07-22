@@ -9,7 +9,7 @@
 	aliases {
 		label-mac-device = &gmac0;
 		led-boot = &led_lightblue;
-		led-failsafe = &led_lightblue;
+		led-failsafe = &led_white;
 		led-running = &led_white;
 		led-upgrade = &led_lightblue;
 		serial0 = &uart0;
@@ -40,12 +40,12 @@
 	leds {
 		compatible = "gpio-leds";
 
-		led_lightblue: led@0 {
+		led_lightblue: light {
 			label = "blue:run";
 			gpios = <&pio 31 GPIO_ACTIVE_LOW>;
 		};
 
-		led_white: led@1 {
+		led_white: system {
 			label = "white:system";
 			gpios = <&pio 30 GPIO_ACTIVE_LOW>;
 		};

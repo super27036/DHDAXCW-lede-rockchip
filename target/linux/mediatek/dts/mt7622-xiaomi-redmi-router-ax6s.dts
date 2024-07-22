@@ -2,7 +2,6 @@
 /dts-v1/;
 
 #include <dt-bindings/input/input.h>
-#include <dt-bindings/leds/common.h>
 #include <dt-bindings/gpio/gpio.h>
 
 #include "mt7622.dtsi"
@@ -22,8 +21,7 @@
 
 	chosen {
 		stdout-path = "serial0:115200n8";
-		rootdisk = <&ubi_rootfs>;
-		bootargs = "earlycon=uart8250,mmio32,0x11002000 swiotlb=512 ubi.block=0,fit root=/dev/fit0";
+		bootargs = "earlycon=uart8250,mmio32,0x11002000 console=ttyS0,115200n8 swiotlb=512";
 	};
 
 	memory {
@@ -34,14 +32,12 @@
 		compatible = "gpio-leds";
 
 		led_power_blue: power_blue {
-			function = LED_FUNCTION_POWER;
-			color = <LED_COLOR_ID_BLUE>;
+			label = "blue:power";
 			gpios = <&pio 18 GPIO_ACTIVE_LOW>;
 		};
 
 		led_power_amber: power_amber {
-			function = LED_FUNCTION_POWER;
-			color = <LED_COLOR_ID_AMBER>;
+			label = "amber:power";
 			gpios = <&pio 17 GPIO_ACTIVE_LOW>;
 		};
 
@@ -164,9 +160,9 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		switch@1f {
+		switch@0 {
 			compatible = "mediatek,mt7531";
-			reg = <31>;
+			reg = <0>;
 			interrupt-controller;
 			#interrupt-cells = <1>;
 			interrupt-parent = <&pio>;
@@ -199,6 +195,7 @@
 
 				port@6 {
 					reg = <6>;
+					label = "cpu";
 					ethernet = <&gmac0>;
 					phy-mode = "2500base-x";
 
@@ -231,7 +228,7 @@
 
 		mediatek,bmt-v2;
 		mediatek,bmt-table-size = <0x1000>;
-		mediatek,bmt-remap-range = <0x0 0x340000>;
+		mediatek,bmt-remap-range = <0x0 0x6c0000>;
 
 		partitions {
 			compatible = "fixed-partitions";
@@ -296,9 +293,12 @@
 				read-only;
 			};
 
+			/* Shrunk and renamed from "firmware"
+			 * as to not break luci size checks
+			 */
 			partition@2c0000 {
-				label = "ubi-loader";
-				reg = <0x2c0000 0x80000>;
+				label = "kernel";
+				reg = <0x2c0000 0x400000>;
 			};
 
 			/* ubi partition is the result of squashing
@@ -308,16 +308,9 @@
 			 * - overlay
 			 * - obr
 			 */
-			partition@340000 {
+			partition@6c0000 {
 				label = "ubi";
-				reg = <0x340000 0x7280000>;
-				compatible = "linux,ubi";
-
-				volumes {
-					ubi_rootfs: ubi-volume-fit {
-						volname = "fit";
-					};
-				};
+				reg = <0x6C0000 0x6f00000>;
 			};
 		};
 	};

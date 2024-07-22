@@ -8,22 +8,10 @@ PKG_LICENSE_FILES:=
 
 PKG_SOURCE_URL:=https://github.com/openwrt/mt76
 PKG_SOURCE_PROTO:=git
-
-ifdef CONFIG_LINUX_5_4
-PKG_SOURCE_DATE:=2022-12-22
-PKG_SOURCE_VERSION:=5b509e80384ab019ac11aa90c81ec0dbb5b0d7f2
-PKG_MIRROR_HASH:=6fc25df4d28becd010ff4971b23731c08b53e69381a9e4c868091899712f78a9
-PATCH_DIR:=./patches-5.4
-else ifndef ($(filter on,$(CONFIG_LINUX_6_1) $(CONFIG_LINUX_6_6)),)
-PKG_SOURCE_DATE:=2024-04-04
-PKG_SOURCE_VERSION:=8f301a5c5fe3d998b50666bde1d35d412833be89
-PKG_MIRROR_HASH:=49291145ccceeac2964c9a43a46bed88298e5c1da63c6f3c2c1f6b3c1902a61e
-PATCH_DIR:=./patches-6.x
-else
-PKG_SOURCE_DATE:=2023-08-14
-PKG_SOURCE_VERSION:=b14c2351ddb8601c322576d84029e463d456caef
-PKG_MIRROR_HASH:=62b5e157ad525424b6857e77ed373e8d39d03af71b057f8b309d8b293d6eac5f
-endif
+PKG_SOURCE_DATE:=2024-07-16
+#PKG_SOURCE_VERSION:=3b47d9df427c4833605a172f2a8f0e0012b04c80
+PKG_SOURCE_VERSION:=e25fb9a010f9c8a2975b71f68d5dc6c5dc011109
+PKG_MIRROR_HASH:=23c3aaa53fb2e088446eb18148a44d3edcd3a0eda1ee41cf5cbf56064ebbee58
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_USE_NINJA:=0
@@ -584,14 +572,23 @@ define KernelPackage/mt7915-firmware/install
 		$(1)/lib/firmware/mediatek
 endef
 
+#define KernelPackage/mt7916-firmware/install
+#	$(INSTALL_DIR) $(1)/lib/firmware/mediatek
+#	cp \
+#		$(PKG_BUILD_DIR)/firmware/mt7916_wa.bin \
+#		$(PKG_BUILD_DIR)/firmware/mt7916_wm.bin \
+#		$(PKG_BUILD_DIR)/firmware/mt7916_rom_patch.bin \
+#		$(1)/lib/firmware/mediatek
+#endef
+
+
 define KernelPackage/mt7916-firmware/install
 	$(INSTALL_DIR) $(1)/lib/firmware/mediatek
-	cp \
-		$(PKG_BUILD_DIR)/firmware/mt7916_wa.bin \
-		$(PKG_BUILD_DIR)/firmware/mt7916_wm.bin \
-		$(PKG_BUILD_DIR)/firmware/mt7916_rom_patch.bin \
-		$(1)/lib/firmware/mediatek
+	cp ./firmware_7916/mt7916_wa.bin  $(1)/lib/firmware/mediatek
+	cp ./firmware_7916/mt7916_wm.bin  $(1)/lib/firmware/mediatek
+	cp ./firmware_7916/mt7916_rom_patch.bin  $(1)/lib/firmware/mediatek
 endef
+
 
 define KernelPackage/mt7981-firmware/install
 	$(INSTALL_DIR) $(1)/lib/firmware/mediatek
@@ -643,6 +640,11 @@ endef
 define Package/mt76-test/install
 	mkdir -p $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tools/mt76-test $(1)/usr/sbin
+endef
+
+define Build/InstallDev
+	mkdir -p $(STAGING_DIR_IMAGE)
+	$(CP) $(PKG_BUILD_DIR)/firmware/mt7981_eeprom_mt7976_dbdc.bin $(STAGING_DIR_IMAGE)/
 endef
 
 $(eval $(call KernelPackage,mt76-core))
