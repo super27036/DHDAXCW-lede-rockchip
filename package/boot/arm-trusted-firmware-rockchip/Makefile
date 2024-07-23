@@ -63,21 +63,6 @@ TFA_TARGETS:= \
 	rk3568 \
 	rk3588
 
-ifeq ($(BUILD_VARIANT),rk3568-e25)
-  define Download/rk3568-tpl-e25
-    FILE:=$(RK3568_TPL_E25)
-    URL:=https://github.com/radxa/rkbin/raw/5696fab20dcac57c1458f72dc7604ba60e553adf/bin/rk35/
-    HASH:=1815f9649dc5661a3ef184b052da39286e51453a66f6ff53cc3e345d65dfabd4
-  endef
-
-  define Build/Prepare
-	$(eval $(call Download,rk3568-tpl-e25))
-	$(call Build/Prepare/Default)
-
-	$(CP) $(DL_DIR)/$(RK3568_TPL_E25) $(PKG_BUILD_DIR)/bin/rk35/
-  endef
-endif
-
 define Build/Compile
 	# This comment is the workaround for "extraneous 'endif'" error
 ifneq ($(LOADER),)
