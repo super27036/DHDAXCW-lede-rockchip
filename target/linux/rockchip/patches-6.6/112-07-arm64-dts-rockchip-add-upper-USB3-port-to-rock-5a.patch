@@ -26,7 +26,7 @@ Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
 --- a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
-@@ -695,6 +695,14 @@
+@@ -696,6 +696,14 @@
  	};
  };
  
@@ -41,7 +41,7 @@ Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
  &u2phy2 {
  	status = "okay";
  };
-@@ -718,6 +726,15 @@
+@@ -719,6 +727,15 @@
  	status = "okay";
  };
  
@@ -57,7 +57,7 @@ Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
  &usb_host0_ehci {
  	status = "okay";
  	pinctrl-names = "default";
-@@ -728,6 +745,11 @@
+@@ -729,6 +746,11 @@
  	status = "okay";
  };
  

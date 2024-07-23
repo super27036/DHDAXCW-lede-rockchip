@@ -45,7 +45,7 @@ Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
  	clk_disable_unprepare(dwc->susp_clk);
  	clk_disable_unprepare(dwc->ref_clk);
  	clk_disable_unprepare(dwc->bus_clk);
-@@ -1822,6 +1836,18 @@ static int dwc3_get_clocks(struct dwc3 *
+@@ -1840,6 +1854,18 @@ static int dwc3_get_clocks(struct dwc3 *
  			return dev_err_probe(dev, PTR_ERR(dwc->susp_clk),
  					"could not get suspend clock\n");
  		}
