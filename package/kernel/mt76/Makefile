@@ -238,6 +238,9 @@ define KernelPackage/mt7915e
   DEPENDS+=@PCI_SUPPORT +kmod-mt76-connac +kmod-hwmon-core +kmod-thermal +@DRIVER_11AX_SUPPORT +@KERNEL_RELAY
   FILES:= $(PKG_BUILD_DIR)/mt7915/mt7915e.ko
   AUTOLOAD:=$(call AutoProbe,mt7915e)
+ifneq ($(CONFIG_TARGET_mediatek_filogic)$(CONFIG_TARGET_mediatek_mt7622),)
+  MODPARAMS.mt7915e:=wed_enable=Y
+endif
 endef
 
 define KernelPackage/mt7916-firmware
@@ -288,7 +291,7 @@ define KernelPackage/mt7921-common
   $(KernelPackage/mt76-default)
   TITLE:=MediaTek MT7921 wireless driver common code
   HIDDEN:=1
-  DEPENDS+=+kmod-mt792x-common +kmod-mt7921-firmware +@DRIVER_11AX_SUPPORT +kmod-hwmon-core
+  DEPENDS+=+kmod-mt792x-common +kmod-mt7921-firmware +kmod-mt7922-firmware +@DRIVER_11AX_SUPPORT +kmod-hwmon-core
   FILES:= $(PKG_BUILD_DIR)/mt7921/mt7921-common.ko
 endef
 
@@ -572,23 +575,12 @@ define KernelPackage/mt7915-firmware/install
 		$(1)/lib/firmware/mediatek
 endef
 
-#define KernelPackage/mt7916-firmware/install
-#	$(INSTALL_DIR) $(1)/lib/firmware/mediatek
-#	cp \
-#		$(PKG_BUILD_DIR)/firmware/mt7916_wa.bin \
-#		$(PKG_BUILD_DIR)/firmware/mt7916_wm.bin \
-#		$(PKG_BUILD_DIR)/firmware/mt7916_rom_patch.bin \
-#		$(1)/lib/firmware/mediatek
-#endef
-
-
 define KernelPackage/mt7916-firmware/install
 	$(INSTALL_DIR) $(1)/lib/firmware/mediatek
 	cp ./firmware_7916/mt7916_wa.bin  $(1)/lib/firmware/mediatek
 	cp ./firmware_7916/mt7916_wm.bin  $(1)/lib/firmware/mediatek
 	cp ./firmware_7916/mt7916_rom_patch.bin  $(1)/lib/firmware/mediatek
 endef
-
 
 define KernelPackage/mt7981-firmware/install
 	$(INSTALL_DIR) $(1)/lib/firmware/mediatek
