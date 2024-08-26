@@ -577,10 +577,10 @@ endef
 define KernelPackage/mt7916-firmware/install
 	$(INSTALL_DIR) $(1)/lib/firmware/mediatek
 	cp \
-  ./firmware_7916/mt7916_wa.bin \
-	./firmware_7916/mt7916_wm.bin \
-	./firmware_7916/mt7916_rom_patch.bin \
-  $(1)/lib/firmware/mediatek
+		./firmware_7916/mt7916_wa.bin \
+		./firmware_7916/mt7916_wm.bin \
+		./firmware_7916/mt7916_rom_patch.bin \
+		$(1)/lib/firmware/mediatek
 endef
 
 define KernelPackage/mt7981-firmware/install
@@ -622,20 +622,20 @@ endef
 define KernelPackage/mt7996-firmware/install
 	$(INSTALL_DIR) $(1)/lib/firmware/mediatek/mt7996
 	cp \
-		./firmware_7996/firmware/mt7996/mt7996_wa.bin \
-		./firmware_7996/firmware/mt7996/mt7996_wm.bin \
-		./firmware_7996/firmware/mt7996/mt7996_wm_tm.bin \
-		./firmware_7996/firmware/mt7996/mt7996_rom_patch.bin \
-		./firmware_7996/firmware/mt7996/mt7996_dsp.bin \
-		./firmware_7996/firmware/mt7996/mt7996_wa_233.bin \
-		./firmware_7996/firmware/mt7996/mt7996_wm_233.bin \
-		./firmware_7996/firmware/mt7996/mt7996_wm_tm_233.bin \
-		./firmware_7996/firmware/mt7996/mt7996_rom_patch_233.bin \
-		./firmware_7996/firmware/mt7996/mt7996_eeprom.bin \
-		./firmware_7996/firmware/mt7996/mt7996_eeprom_2i5i6i.bin \
-		./firmware_7996/firmware/mt7996/mt7996_eeprom_233.bin \
-		./firmware_7996/firmware/mt7996/mt7996_eeprom_233_2i5i6i.bin \
-		./firmware_7996/firmware/mt7996/mt7996_eeprom_dual_404.bin \
+		./firmware_7996/mt7996_wa.bin \
+		./firmware_7996/mt7996_wm.bin \
+		./firmware_7996/mt7996_wm_tm.bin \
+		./firmware_7996/mt7996_rom_patch.bin \
+		./firmware_7996/mt7996_dsp.bin \
+		./firmware_7996/mt7996_wa_233.bin \
+		./firmware_7996/mt7996_wm_233.bin \
+		./firmware_7996/mt7996_wm_tm_233.bin \
+		./firmware_7996/mt7996_rom_patch_233.bin \
+		./firmware_7996/mt7996_eeprom.bin \
+		./firmware_7996/mt7996_eeprom_2i5i6i.bin \
+		./firmware_7996/mt7996_eeprom_233.bin \
+		./firmware_7996/mt7996_eeprom_233_2i5i6i.bin \
+		./firmware_7996/mt7996_eeprom_dual_404.bin \
 		$(1)/lib/firmware/mediatek/mt7996
 endef
 
