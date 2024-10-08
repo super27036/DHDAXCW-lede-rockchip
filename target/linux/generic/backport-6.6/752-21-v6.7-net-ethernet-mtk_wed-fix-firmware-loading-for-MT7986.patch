@@ -22,7 +22,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 
 --- a/drivers/net/ethernet/mediatek/mtk_wed_mcu.c
 +++ b/drivers/net/ethernet/mediatek/mtk_wed_mcu.c
-@@ -258,16 +258,12 @@ mtk_wed_get_memory_region(struct mtk_wed
+@@ -261,16 +261,12 @@ mtk_wed_get_memory_region(struct mtk_wed
  }
  
  static int
@@ -40,7 +40,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
  	trailer_ptr = fw->data + fw->size - sizeof(*trailer);
  	trailer = (const struct mtk_wed_fw_trailer *)trailer_ptr;
  	region_ptr = trailer_ptr - trailer->num_region * sizeof(*fw_region);
-@@ -275,33 +271,41 @@ mtk_wed_mcu_run_firmware(struct mtk_wed_
+@@ -278,33 +274,41 @@ mtk_wed_mcu_run_firmware(struct mtk_wed_
  
  	while (region_ptr < trailer_ptr) {
  		u32 length;
@@ -96,7 +96,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
  }
  
  static int
-@@ -360,11 +364,9 @@ mtk_wed_mcu_load_firmware(struct mtk_wed
+@@ -363,11 +367,9 @@ mtk_wed_mcu_load_firmware(struct mtk_wed
  	dev_info(wo->hw->dev, "MTK WED WO Chip ID %02x Region %d\n",
  		 trailer->chip_id, trailer->num_region);
  

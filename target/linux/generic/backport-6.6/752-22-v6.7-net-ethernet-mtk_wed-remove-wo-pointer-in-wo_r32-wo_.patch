@@ -31,7 +31,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
  {
  	writel(val, mem_region[MTK_WED_WO_REGION_BOOT].addr + reg);
  }
-@@ -373,13 +373,13 @@ mtk_wed_mcu_load_firmware(struct mtk_wed
+@@ -376,13 +376,13 @@ mtk_wed_mcu_load_firmware(struct mtk_wed
  		boot_cr = MTK_WO_MCU_CFG_LS_WA_BOOT_ADDR_ADDR;
  	else
  		boot_cr = MTK_WO_MCU_CFG_LS_WM_BOOT_ADDR_ADDR;

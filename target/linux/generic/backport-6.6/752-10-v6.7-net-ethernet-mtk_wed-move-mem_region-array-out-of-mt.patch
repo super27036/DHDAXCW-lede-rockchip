@@ -45,7 +45,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
  }
  
  static struct sk_buff *
-@@ -294,18 +310,6 @@ next:
+@@ -297,18 +313,6 @@ next:
  static int
  mtk_wed_mcu_load_firmware(struct mtk_wed_wo *wo)
  {
@@ -64,7 +64,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
  	const struct mtk_wed_fw_trailer *trailer;
  	const struct firmware *fw;
  	const char *fw_name;
-@@ -319,11 +323,6 @@ mtk_wed_mcu_load_firmware(struct mtk_wed
+@@ -322,11 +326,6 @@ mtk_wed_mcu_load_firmware(struct mtk_wed
  			return ret;
  	}
  
