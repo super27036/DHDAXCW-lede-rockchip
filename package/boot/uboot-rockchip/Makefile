@@ -114,6 +114,13 @@ define U-Boot/zero-3e-rk3566
     radxa_zero-3e
 endef
 
+define U-Boot/nanopi-r3s-rk3566
+  $(U-Boot/Default/rk3566)
+  NAME:=NanoPi R3S
+  BUILD_DEVICES:= \
+    friendlyarm_nanopi-r3s
+endef
+
 # RK3568 boards
 
 define U-Boot/Default/rk3568
@@ -226,12 +233,19 @@ define U-Boot/lubancat-4-rk3588s
 endef
 
 UBOOT_TARGETS := \
+  doornet1-rk3328 \
+  doornet2-rk3399 \
+  lubancat-1-rk3566 \
+  lubancat-2-rk3568 \
+  lubancat-1n-rk3566 \
+  lubancat-2n-rk3568 \
+  lubancat-4-rk3588s \
+  lubancat-5-rk3588 \
   nanopi-r2c-rk3328 \
   nanopi-r2s-rk3328 \
-  doornet1-rk3328 \
+  nanopi-r3s-rk3566\
   nanopi-r4s-rk3399 \
   nanopi-r4se-rk3399 \
-  doornet2-rk3399 \
   nanopi-r5s-rk3568 \
   nanopi-r5c-rk3568 \
   nanopc-t6-rk3588 \
@@ -240,12 +254,6 @@ UBOOT_TARGETS := \
   opc-h66k-rk3568 \
   opc-h68k-rk3568 \
   opc-h69k-rk3568 \
-  lubancat-1-rk3566 \
-  lubancat-2-rk3568 \
-  lubancat-1n-rk3566 \
-  lubancat-2n-rk3568 \
-  lubancat-4-rk3588s \
-  lubancat-5-rk3588 \
   zero-3e-rk3566 \
   h88k-rk3588
 

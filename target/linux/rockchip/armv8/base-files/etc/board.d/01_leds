@@ -18,6 +18,7 @@ xunlong,orangepi-r1-plus-lts)
 	ucidef_set_led_netdev "lan" "LAN" "$boardname:green:lan" "eth1"
 	;;
 embedfire,doornet2|\
+friendlyelec,nanopi-r3s|\
 friendlyarm,nanopi-r4se|\
 friendlyarm,nanopi-r4s|\
 sharevdi,guangmiao-g4c)
