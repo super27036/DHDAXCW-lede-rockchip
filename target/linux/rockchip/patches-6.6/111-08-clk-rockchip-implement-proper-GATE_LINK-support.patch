@@ -384,7 +384,7 @@ Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
  void rockchip_clk_register_branches(struct rockchip_clk_provider *ctx,
  				    struct rockchip_clk_branch *list,
  				    unsigned int nr_clk)
-@@ -526,6 +590,9 @@ void rockchip_clk_register_branches(stru
+@@ -527,6 +591,9 @@ void rockchip_clk_register_branches(stru
  				ctx->reg_base + list->gate_offset,
  				list->gate_shift, list->gate_flags, &ctx->lock);
  			break;
