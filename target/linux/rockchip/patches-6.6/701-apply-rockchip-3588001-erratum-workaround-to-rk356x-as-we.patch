@@ -1,6 +1,6 @@
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -4734,7 +4734,9 @@ static bool __maybe_unused its_enable_rk
+@@ -4746,7 +4746,9 @@ static bool __maybe_unused its_enable_rk
  {
  	struct its_node *its = data;
  
