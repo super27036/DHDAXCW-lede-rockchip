@@ -1,6 +1,6 @@
 --- a/arch/arm64/boot/dts/rockchip/rk3588-armsom-sige7.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3588-armsom-sige7.dts
-@@ -273,6 +273,24 @@
+@@ -268,6 +268,24 @@
  &pcie2x1l1 {
  	reset-gpios = <&gpio3 RK_PD4 GPIO_ACTIVE_HIGH>;
  	status = "okay";
@@ -25,7 +25,7 @@
  };
  
  /* phy0 - left ethernet port */
-@@ -292,12 +310,32 @@
+@@ -287,12 +305,32 @@
  };
  
  &pinctrl {
@@ -58,7 +58,7 @@
  	leds {
  		led_rgb_g: led-rgb-g {
  			rockchip,pins = <0 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>;
-@@ -712,6 +750,26 @@
+@@ -707,6 +745,26 @@
  	status = "okay";
  };
  
