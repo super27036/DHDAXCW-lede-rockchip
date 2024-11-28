@@ -45,6 +45,9 @@ hinlink,opc-h68k|\
 hinlink,opc-h69k)
 	ucidef_set_led_netdev "wan" "WAN" "blue:net" "eth0"
 	;;
+hinlink,h88k)
+	ucidef_set_led_netdev "wan" "WAN" "amber:net" "eth0"
+	;;
 esac
 
 board_config_flush
