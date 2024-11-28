@@ -20,11 +20,12 @@ friendlyarm_nanopc-t6
 hinlink_opc-h66k
 hinlink_opc-h68k
 hinlink_opc-h69k
+hinlink_h88k
 ```
 
 ### Next plan to add equipment:
 ```
-hinlink_h88k
+no
 ```
 How to compile the OpenWrt firmware you need
 -
