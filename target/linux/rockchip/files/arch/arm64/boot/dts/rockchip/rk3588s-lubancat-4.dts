@@ -804,11 +804,7 @@
 	};
 };
 
-&usbdp_phy0_u3 {
-	status = "okay";
-};
-
-&usbdp_phy0_dp {
+&usbdp_phy0 {
 	status = "okay";
 };
 

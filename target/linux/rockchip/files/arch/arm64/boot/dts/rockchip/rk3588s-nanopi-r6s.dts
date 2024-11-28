@@ -54,22 +54,28 @@
 		pinctrl-0 = <&lan1_led_pin>, <&lan2_led_pin>, <&power_led_pin>, <&wan_led_pin>;
 
 		led-lan1 {
-			label = "green:lan1";
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_LAN;
+			function-enumerator = <1>;
 			gpios = <&gpio1 RK_PC3 GPIO_ACTIVE_HIGH>;
 		};
 
 		led-lan2 {
-			label = "green:lan2";
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_LAN;
+			function-enumerator = <2>;
 			gpios = <&gpio1 RK_PC4 GPIO_ACTIVE_HIGH>;
 		};
 
 		power_led: led-power {
-			label = "red:power";
+			color = <LED_COLOR_ID_RED>;
+			function = LED_FUNCTION_POWER;
 			gpios = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
 		};
 
 		led-wan {
-			label = "green:wan";
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_WAN;
 			gpios = <&gpio1 RK_PC2 GPIO_ACTIVE_HIGH>;
 		};
 	};
@@ -162,22 +168,19 @@
 
 &cpu_l0 {
 	cpu-supply = <&vdd_cpu_lit_s0>;
-	mem-supply = <&vdd_cpu_lit_mem_s0>;
 };
 
 &cpu_b0 {
 	cpu-supply = <&vdd_cpu_big0_s0>;
-	mem-supply = <&vdd_cpu_big0_mem_s0>;
 };
 
 &cpu_b2 {
 	cpu-supply = <&vdd_cpu_big1_s0>;
-	mem-supply = <&vdd_cpu_big1_mem_s0>;
 };
 
 &gmac1 {
 	clock_in_out = "output";
-	label = "eth2";
+	label = "eth0";
 	phy-handle = <&rgmii_phy1>;
 	phy-mode = "rgmii-rxid";
 	pinctrl-names = "default";
@@ -195,12 +198,17 @@
 	status = "okay";
 };
 
+&gpu {
+	mali-supply = <&vdd_gpu_s0>;
+	status = "okay";
+};
+
 &i2c0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c0m2_xfer>;
 	status = "okay";
 
-	vdd_cpu_big0_s0: vdd_cpu_big0_mem_s0: regulator@42 {
+	vdd_cpu_big0_s0: regulator@42 {
 		compatible = "rockchip,rk8602";
 		reg = <0x42>;
 		fcs,suspend-voltage-selector = <1>;
@@ -217,7 +225,7 @@
 		};
 	};
 
-	vdd_cpu_big1_s0: vdd_cpu_big1_mem_s0: regulator@43 {
+	vdd_cpu_big1_s0: regulator@43 {
 		compatible = "rockchip,rk8603", "rockchip,rk8602";
 		reg = <0x43>;
 		fcs,suspend-voltage-selector = <1>;
@@ -256,6 +264,7 @@
 	rgmii_phy1: ethernet-phy@1 {
 		compatible = "ethernet-phy-ieee802.3-c22";
 		reg = <1>;
+		realtek,led-data = <0x6d60>;
 	};
 };
 
@@ -269,9 +278,12 @@
 		#address-cells = <3>;
 		#size-cells = <2>;
 
-		rtl8125_2: pcie@30,0 {
+		rtl8125_1: pcie@30,0 {
+			compatible = "pci10ec,8125";
 			reg = <0x000000 0 0 0 0>;
-			label = "eth0";
+
+			realtek,led-data = <0x0 0x0 0x2b 0x200>;
+			label = "eth2";
 		};
 	};
 };
@@ -286,8 +298,11 @@
 		#address-cells = <3>;
 		#size-cells = <2>;
 
-		rtl8125_1: pcie@40,0 {
+		rtl8125_2: pcie@40,0 {
+			compatible = "pci10ec,8125";
 			reg = <0x000000 0 0 0 0>;
+
+			realtek,led-data = <0x0 0x0 0x2b 0x200>;
 			label = "eth1";
 		};
 	};
@@ -367,6 +382,7 @@
 	no-mmc;
 	pinctrl-names = "default";
 	pinctrl-0 = <&sdmmc_bus4 &sdmmc_clk &sdmmc_cmd &sdmmc_det>;
+	sd-uhs-sdr50;
 	vmmc-supply = <&vcc_3v3_sd_s0>;
 	vqmmc-supply = <&vccio_sd_s0>;
 	status = "okay";
@@ -791,10 +807,6 @@
 };
 
 &usbdp_phy0 {
-	status = "okay";
-};
-
-&usbdp_phy0_u3 {
 	status = "okay";
 };
 

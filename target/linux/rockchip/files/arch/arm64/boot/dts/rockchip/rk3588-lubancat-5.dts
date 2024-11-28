@@ -896,10 +896,6 @@
 	status = "okay";
 };
 
-&usbdp_phy1_u3 {
-	status = "okay";
-};
-
 &usb_host2_xhci {
 	status = "okay";
 	dr_mode = "host";
@@ -928,11 +924,7 @@
 	};
 };
 
-&usbdp_phy0_u3 {
-	status = "okay";
-};
-
-&usbdp_phy0_dp {
+&usbdp_phy0 {
 	status = "okay";
 };
 

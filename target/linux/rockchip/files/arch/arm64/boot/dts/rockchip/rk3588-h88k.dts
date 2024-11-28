@@ -31,28 +31,30 @@
 	leds {
 		compatible = "gpio-leds";
 		pinctrl-names = "default";
-		pinctrl-0 = <&led_net_en>, <&led_sata_en>,
-			    <&led_user_en>, <&led_work_en>;
+		pinctrl-0 = <&led_red_ai_pin>,
+		            <&led_green_work_pin>,
+		            <&led_blue_sata_pin>,
+		            <&led_amber_net_pin>;
 
-		net {
-			label = "blue:net";
-			gpios = <&gpio2 RK_PC3 GPIO_ACTIVE_HIGH>;
+		led_red_ai: led-red-ai {
+			label = "red:ai";
+			gpios = <&gpio0 RK_PA0 GPIO_ACTIVE_HIGH>;
+			linux,default-trigger = "heartbeat";
 		};
 
-		sata {
-			label = "amber:sata";
-			gpios = <&gpio2 RK_PC5 GPIO_ACTIVE_HIGH>;
-		};
-
-		user {
-			label = "green:user";
+		led_green_work: led-green-work {
+			label = "green:work";
 			gpios = <&gpio3 RK_PB7 GPIO_ACTIVE_HIGH>;
 		};
 
-		work {
-			label = "red:work";
-			gpios = <&gpio0 RK_PA0 GPIO_ACTIVE_HIGH>;
-			linux,default-trigger = "default-on";
+		led_blue_sata: led-blue-sata {
+			label = "blue:sata";
+			gpios = <&gpio2 RK_PC3 GPIO_ACTIVE_HIGH>;
+		};
+
+		led_amber_net: led-amber-net {
+			label = "amber:net";
+			gpios = <&gpio2 RK_PC5 GPIO_ACTIVE_HIGH>;
 		};
 	};
 
@@ -72,6 +74,28 @@
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
 		regulator-name = "vcc5v0_sys";
+		vin-supply = <&vcc12v_dcin>;
+	};
+
+	vcc4v0_sys: vcc4v0-sys {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc4v0_sys";
+		regulator-always-on;
+		regulator-boot-on;
+		regulator-min-microvolt = <4000000>;
+		regulator-max-microvolt = <4000000>;
+		startup-delay-us = <100000>;
+		vin-supply = <&vcc12v_dcin>;
+	};
+	
+	vcc3v3_sys: vcc3v3-sys {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc3v3_sys";
+		regulator-always-on;
+		regulator-boot-on;
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		startup-delay-us = <100000>;
 		vin-supply = <&vcc12v_dcin>;
 	};
 
@@ -180,6 +204,16 @@
 		vin-supply = <&avcc_1v8_s0>;
 	};
 
+	vcc3v3_pcie20: vcc3v3-pcie20 {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc3v3_pcie20";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+		regulator-boot-on;
+		vin-supply = <&vcc4v0_sys>;
+	};
+
 	vcc3v3_pcie30: vcc3v3-pcie30 {
 		compatible = "regulator-fixed";
 		regulator-name = "vcc3v3_pcie30";
@@ -188,7 +222,7 @@
 		enable-active-high;
 		gpios = <&gpio3 RK_PD5 GPIO_ACTIVE_HIGH>;
 		startup-delay-us = <5000>;
-		vin-supply = <&vcc12v_dcin>;
+		vin-supply = <&vcc3v3_sys>;
 	};
 
 	vcc_1v1_nldo_s3: vcc-1v1-nldo-s3 {
@@ -212,6 +246,16 @@
 		gpios = <&gpio4 RK_PA4 GPIO_ACTIVE_HIGH>;
 		vin-supply = <&vcc12v_dcin>;
 	};
+
+	vcc3v0_lcd: vcc3v0-lcd {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc3v0_lcd";
+		regulator-always-on;
+		regulator-boot-on;
+		regulator-min-microvolt = <3000000>;
+		regulator-max-microvolt = <3000000>;
+		vin-supply = <&vcc4v0_sys>;
+	};
 };
 
 &combphy0_ps {
@@ -228,42 +272,39 @@
 
 &cpu_b0 {
 	cpu-supply = <&vdd_cpu_big0_s0>;
-	mem-supply = <&vdd_cpu_big0_s0>;
 };
 
 &cpu_b1 {
 	cpu-supply = <&vdd_cpu_big0_s0>;
-	mem-supply = <&vdd_cpu_big0_s0>;
 };
 
 &cpu_b2 {
 	cpu-supply = <&vdd_cpu_big1_s0>;
-	mem-supply = <&vdd_cpu_big1_s0>;
 };
 
 &cpu_b3 {
 	cpu-supply = <&vdd_cpu_big1_s0>;
-	mem-supply = <&vdd_cpu_big1_s0>;
 };
 
 &cpu_l0 {
 	cpu-supply = <&vdd_cpu_lit_s0>;
-	mem-supply = <&vdd_cpu_lit_mem_s0>;
 };
 
 &cpu_l1 {
 	cpu-supply = <&vdd_cpu_lit_s0>;
-	mem-supply = <&vdd_cpu_lit_mem_s0>;
 };
 
 &cpu_l2 {
 	cpu-supply = <&vdd_cpu_lit_s0>;
-	mem-supply = <&vdd_cpu_lit_mem_s0>;
 };
 
 &cpu_l3 {
 	cpu-supply = <&vdd_cpu_lit_s0>;
-	mem-supply = <&vdd_cpu_lit_mem_s0>;
+};
+
+&gpu {
+	mali-supply = <&vdd_gpu_s0>;
+	status = "okay";
 };
 
 &gmac0 {
@@ -759,19 +800,23 @@
 			 &i2s0_sdo0>;
 };
 
-/* rtl8125b 2.5g ethernet */
+/* rtl8125b: eth1 */
 &pcie2x1l1 {
 	reset-gpios = <&gpio4 RK_PA2 GPIO_ACTIVE_HIGH>;
 	status = "okay";
-	
+	vpcie3v3-supply = <&vcc3v3_pcie20>;
+
 	pcie@0,0 {
-		reg = <0x00400000 0 0 0 0>;
+		reg = <0x00200000 0 0 0 0>;
 		#address-cells = <3>;
 		#size-cells = <2>;
 
-		rtl8125_1: pcie@40,0 {
+		rtl8125_1: pcie@20,0 {
+			compatible = "pci10ec,8125";
 			reg = <0x000000 0 0 0 0>;
-			label = "eth0";
+
+			realtek,led-data = <0x0 0x0 0x2b 0x200>;
+			label = "eth1";
 		};
 	};
 };
@@ -789,16 +834,30 @@
 &pcie2x1l0 {
 	reset-gpios = <&gpio0 RK_PB0 GPIO_ACTIVE_HIGH>;
 	status = "okay";
+	vpcie3v3-supply = <&vcc3v3_sys>;
+};
 
-	pcie@0,0 {
-		reg = <0x00300000 0 0 0 0>;
-		#address-cells = <3>;
-		#size-cells = <2>;
+&spi4 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	assigned-clocks = <&cru CLK_SPI4>;
+	assigned-clock-rates = <200000000>;
+	num-cs = <1>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&spi4_custom_pins &spi4m2_cs0>;
+	status = "okay";
 
-		rtl8125_2: pcie@30,0 {
-			reg = <0x000000 0 0 0 0>;
-			label = "eth1";
-		};
+	panel@0 {
+		compatible = "sitronix,st7789v";
+		reg = <0>;
+		power-supply = <&vcc3v0_lcd>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&lcd_dc_pin>;
+		dc-gpios = <&gpio1 RK_PA4 GPIO_ACTIVE_HIGH>;
+        spi-max-frequency = <2000000>;
+		buswidth = <8>;
+		rotate = <90>;
+		debug = <0>;
 	};
 };
 
@@ -811,10 +870,25 @@
 };
 
 /* pcie2x1l2 | sata0 => combphy0_ps */
-/* rtl8125b 2.5g ethernet */
+/* rtl8125b eth0 */
 &pcie2x1l2 {
 	reset-gpios = <&gpio4 RK_PA5 GPIO_ACTIVE_HIGH>;
 	status = "okay";
+	vpcie3v3-supply = <&vcc3v3_pcie20>;
+
+	pcie@0,0 {
+		reg = <0x00400000 0 0 0 0>;
+		#address-cells = <3>;
+		#size-cells = <2>;
+
+		rtl8125_2: pcie@40,0 {
+			compatible = "pci10ec,8125";
+			reg = <0x000000 0 0 0 0>;
+
+			realtek,led-data = <0x0 0x0 0x2b 0x200>;
+			label = "eth0";
+		};
+	};
 };
 
 &sata0 {
@@ -836,23 +910,22 @@
 	status = "okay";
 };
 
-
 &pinctrl {
 	leds {
-		led_net_en: led_net_en {
-			rockchip,pins = <2 RK_PC3 RK_FUNC_GPIO &pcfg_pull_none>;
+		led_red_ai_pin: led-red-ai-pin {
+			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 
-		led_sata_en: led_sata_en {
-			rockchip,pins = <2 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
-		};
-
-		led_user_en: led_user_en {
+		led_green_work_pin: led-green-work-pin {
 			rockchip,pins = <3 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 
-		led_work_en: led_work_en {
-			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
+		led_blue_sata_pin: led-blue-sata-pin {
+			rockchip,pins = <2 RK_PC3 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+
+		led_amber_net_pin: led-amber-net-pin {
+			rockchip,pins = <2 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 	};
 
@@ -901,6 +974,22 @@
 	sata {
 		sata0_pm_reset: sata0-pm-reset {
 			rockchip,pins = <4 RK_PA0 RK_FUNC_GPIO &pcfg_output_high>;
+		};
+	};
+
+	lcd {
+		lcd_dc_pin: lcd-dc-pin {
+			rockchip,pins = <1 RK_PA4 RK_FUNC_GPIO &pcfg_pull_up_drv_level_6>;
+		};
+
+	spi4_custom_pins: spi4-custom-pins {
+		rockchip,pins =
+			/* spi4_clk_m2 */
+			<1 RK_PA2 8 &pcfg_pull_up_drv_level_6>,
+			/* spi4_mosi_m2 */
+			<1 RK_PA1 8 &pcfg_pull_up_drv_level_6>,
+			/* spi4_miso_m0 */
+			<1 RK_PC0 8 &pcfg_pull_up_drv_level_6>;
 		};
 	};
 };
@@ -1003,11 +1092,11 @@
 	};
 };
 
-&usbdp_phy0_dp {
+&usbdp_phy0 {
 	status = "okay";
 };
 
-&usbdp_phy0_u3 {
+&usbdp_phy0 {
 	status = "okay";
 };
 
@@ -1015,7 +1104,7 @@
 	status = "okay";
 };
 
-&usbdp_phy1_u3 {
+&usbdp_phy1 {
 	status = "okay";
 };
 
@@ -1053,3 +1142,119 @@
 &usb_host1_xhci {
 	status = "okay";
 };
+
+&gpio0 {
+	gpio-line-names =
+		/* GPIO0_A0-A3 */
+		"", "", "", "",
+		/* GPIO0_A4-A7 */
+		"", "", "", "",
+
+		/* GPIO0_B0-B3 */
+		"", "", "", "",
+		/* GPIO0_B4-B7 */
+		"", "PIN_8", "PIN_10", "",
+
+		/* GPIO0_C0-C3 */
+		"", "", "", "",
+		/* GPIO0_C4-C7 */
+		"", "", "", "",
+
+		/* GPIO0_D0-D3 */
+		"", "", "", "",
+		/* GPIO0_D4-D7 */
+		"", "", "", "";
+};
+
+&gpio1 {
+	gpio-line-names =
+		/* GPIO1_A0-A3 */
+		"", "", "", "",
+		/* GPIO1_A4-A7 */
+		"", "", "", "",
+
+		/* GPIO1_B0-B3 */
+		"", "PIN_21", "PIN_19", "PIN_23",
+		/* GPIO1_B4-B7 */
+		"PIN_24", "PIN_26", "", "PIN_31",
+
+		/* GPIO1_C0-C3 */
+		"", "", "", "",
+		/* GPIO1_C4-C7 */
+		"", "", "", "",
+
+		/* GPIO1_D0-D3 */
+		"", "", "", "",
+		/* GPIO1_D4-D7 */
+		"", "", "", "PIN_29";
+};
+
+&gpio2 {
+	gpio-line-names =
+		/* GPIO2_A0-A3 */
+		"", "", "", "",
+		/* GPIO2_A4-A7 */
+		"", "", "", "",
+
+		/* GPIO2_B0-B3 */
+		"", "", "", "",
+		/* GPIO2_B4-B7 */
+		"", "", "", "",
+
+		/* GPIO2_C0-C3 */
+		"", "", "", "",
+		/* GPIO2_C4-C7 */
+		"", "", "", "",
+
+		/* GPIO2_D0-D3 */
+		"", "", "", "",
+		/* GPIO2_D4-D7 */
+		"", "", "", "";
+};
+
+&gpio3 {
+	gpio-line-names =
+		/* GPIO3_A0-A3 */
+		"", "", "", "",
+		/* GPIO3_A4-A7 */
+		"PIN_16", "", "", "PIN_33",
+
+		/* GPIO3_B0-B3 */
+		"", "PIN_36", "PIN_38", "PIN_40",
+		/* GPIO3_B4-B7 */
+		"", "PIN_12", "PIN_35", "PIN_13",
+
+		/* GPIO3_C0-C3 */
+		"PIN_15", "PIN_11", "PIN_32", "PIN_7",
+		/* GPIO3_C4-C7 */
+		"", "", "", "",
+
+		/* GPIO3_D0-D3 */
+		"", "", "", "",
+		/* GPIO3_D4-D7 */
+		"", "", "", "";
+};
+
+&gpio4 {
+	gpio-line-names =
+		/* GPIO4_A0-A3 */
+		"", "", "", "",
+		/* GPIO4_A4-A7 */
+		"", "", "", "",
+
+		/* GPIO4_B0-B3 */
+		"", "", "PIN_5", "PIN_3",
+		/* GPIO4_B4-B7 */
+		"", "", "", "",
+
+		/* GPIO4_C0-C3 */
+		"", "", "", "",
+		/* GPIO4_C4-C7 */
+		"PIN_18", "PIN_28", "PIN_27", "",
+
+		/* GPIO4_D0-D3 */
+		"", "", "", "",
+		/* GPIO4_D4-D7 */
+		"", "", "", "";
+};
+
