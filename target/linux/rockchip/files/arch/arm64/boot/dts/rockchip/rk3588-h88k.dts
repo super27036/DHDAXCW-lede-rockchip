@@ -22,6 +22,11 @@
 		mmc0 = &sdmmc;
 		mmc1 = &sdhci;
 		mmc2 = &sdio;
+
+		led-boot = &led_red_power;
+		led-failsafe = &led_red_power;
+		led-running = &led_red_power;
+		led-upgrade = &led_red_power;
 	};
 
 	chosen {
@@ -31,24 +36,23 @@
 	leds {
 		compatible = "gpio-leds";
 		pinctrl-names = "default";
-		pinctrl-0 = <&led_red_ai_pin>,
-		            <&led_green_work_pin>,
-		            <&led_blue_sata_pin>,
+		pinctrl-0 = <&led_red_power_pin>,
+		            <&led_green_wlan_pin>,
+		            <&led_blue_5g_pin>,
 		            <&led_amber_net_pin>;
 
-		led_red_ai: led-red-ai {
-			label = "red:ai";
+		led_red_power: led-red-power {
+			label = "red:power";
 			gpios = <&gpio0 RK_PA0 GPIO_ACTIVE_HIGH>;
-			linux,default-trigger = "heartbeat";
 		};
 
-		led_green_work: led-green-work {
-			label = "green:work";
+		led_green_wlan: led-green-wlan {
+			label = "green:wlan";
 			gpios = <&gpio3 RK_PB7 GPIO_ACTIVE_HIGH>;
 		};
 
-		led_blue_sata: led-blue-sata {
-			label = "blue:sata";
+		led_blue_5g: led-blue-5g {
+			label = "blue:5g";
 			gpios = <&gpio2 RK_PC3 GPIO_ACTIVE_HIGH>;
 		};
 
@@ -912,15 +916,15 @@
 
 &pinctrl {
 	leds {
-		led_red_ai_pin: led-red-ai-pin {
+		led_red_power_pin: led-red-power-pin {
 			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 
-		led_green_work_pin: led-green-work-pin {
+		led_green_wlan_pin: led-green-wlan-pin {
 			rockchip,pins = <3 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 
-		led_blue_sata_pin: led-blue-sata-pin {
+		led_blue_5g_pin: led-blue-5g-pin {
 			rockchip,pins = <2 RK_PC3 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 
