@@ -54,28 +54,22 @@
 		pinctrl-0 = <&lan1_led_pin>, <&lan2_led_pin>, <&power_led_pin>, <&wan_led_pin>;
 
 		led-lan1 {
-			color = <LED_COLOR_ID_GREEN>;
-			function = LED_FUNCTION_LAN;
-			function-enumerator = <1>;
+			label = "green:lan1";
 			gpios = <&gpio1 RK_PC3 GPIO_ACTIVE_HIGH>;
 		};
 
 		led-lan2 {
-			color = <LED_COLOR_ID_GREEN>;
-			function = LED_FUNCTION_LAN;
-			function-enumerator = <2>;
+			label = "green:lan2";
 			gpios = <&gpio1 RK_PC4 GPIO_ACTIVE_HIGH>;
 		};
 
 		power_led: led-power {
-			color = <LED_COLOR_ID_RED>;
-			function = LED_FUNCTION_POWER;
+			label = "red:power";
 			gpios = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
 		};
 
 		led-wan {
-			color = <LED_COLOR_ID_GREEN>;
-			function = LED_FUNCTION_WAN;
+			label = "green:wan";
 			gpios = <&gpio1 RK_PC2 GPIO_ACTIVE_HIGH>;
 		};
 	};
