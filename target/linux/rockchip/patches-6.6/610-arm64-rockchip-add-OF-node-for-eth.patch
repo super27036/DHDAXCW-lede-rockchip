@@ -211,7 +211,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
 +			reg = <0x000000 0 0 0 0>;
 +
 +			realtek,led-data = <0x0 0x0 0x2b 0x200>;
-+			label = "eth0";
++			label = "eth1";
 +		};
 + 	};
  };
@@ -232,7 +232,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
 +			reg = <0x000000 0 0 0 0>;
 +
 +			realtek,led-data = <0x0 0x0 0x2b 0x200>;
-+			label = "eth1";
++			label = "eth0";
 +		};
 + 	};
  };
